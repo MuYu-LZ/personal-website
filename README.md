@@ -1,4 +1,5 @@
 # Zephan Lee's Personal Website
+🌐 **Live Demo:** https://lizhen-site.pages.dev/
 
 一个高端、浅色系、多动态效果的个人主页，使用 React + Vite + TailwindCSS + Framer Motion 构建。
 
