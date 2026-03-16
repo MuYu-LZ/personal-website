@@ -1,0 +1,74 @@
+/**
+ * 抽屉和遮罩层样式
+ * 玻璃拟态、噪声纹理、高级视觉效果
+ */
+
+/* 抽屉容器 */
+.drawer-container {
+  backdrop-filter: blur(2rem);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(100, 120, 200, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 抽屉背景渐变和噪声纹理 */
+.drawer-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at 30% 50%,
+      rgba(201, 182, 255, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 70% 50%,
+      rgba(167, 243, 208, 0.06) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* 噪声纹理（使用伪元素叠加） */
+.drawer-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* 抽屉内容区域（确保在纹理之上） */
+.drawer-container > div {
+  position: relative;
+  z-index: 2;
+}
+
+/* 性能降级：低端设备禁用复杂效果 */
+@media (prefers-reduced-motion: reduce) {
+  .drawer-container {
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .drawer-container::after,
+  .drawer-container::before {
+    display: none;
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .drawer-container {
+    border-radius: 1.5rem 1.5rem 0 0;
+    max-height: 85vh;
+  }
+}

@@ -1,0 +1,201 @@
+/**
+ * 动效系统样式
+ * 定义关键帧、CSS 变量、工具类
+ */
+
+/* CSS 变量 - Aurora 光幕颜色 */
+:root {
+  --aurora-a: rgba(201, 182, 255, 0.15); /* 淡紫 */
+  --aurora-b: rgba(163, 213, 255, 0.12); /* 天蓝 */
+  --aurora-c: rgba(167, 243, 208, 0.1); /* 薄荷 */
+  --aurora-d: rgba(251, 211, 233, 0.12); /* 粉桃 */
+
+  /* 动画时长 */
+  --aurora-duration: 8s;
+  --float-duration: 6s;
+
+  /* 噪声不透明度 */
+  --grain-opacity: 0.05;
+}
+
+/* 关键帧动画 */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translate(-30px, 30px) scale(0.9);
+    opacity: 0.7;
+  }
+}
+
+@keyframes rainbow-edge {
+  0% {
+    box-shadow: 0 0 20px rgba(109, 94, 241, 0.2),
+      inset 0 0 20px rgba(201, 182, 255, 0.1);
+  }
+  25% {
+    box-shadow: 0 0 25px rgba(163, 213, 255, 0.25),
+      inset 0 0 25px rgba(167, 243, 208, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(251, 211, 233, 0.3),
+      inset 0 0 30px rgba(201, 182, 255, 0.2);
+  }
+  75% {
+    box-shadow: 0 0 25px rgba(167, 243, 208, 0.25),
+      inset 0 0 25px rgba(163, 213, 255, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(109, 94, 241, 0.2),
+      inset 0 0 20px rgba(201, 182, 255, 0.1);
+  }
+}
+
+@keyframes grain-shift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  20% {
+    transform: translate(-15%, 5%);
+  }
+  30% {
+    transform: translate(7%, -25%);
+  }
+  40% {
+    transform: translate(-5%, 25%);
+  }
+  50% {
+    transform: translate(-15%, 10%);
+  }
+  60% {
+    transform: translate(15%, 0%);
+  }
+  70% {
+    transform: translate(0%, 15%);
+  }
+  80% {
+    transform: translate(3%, 35%);
+  }
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+/* 工具类 */
+.glass {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-btn {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(109, 94, 241, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.glass-btn:focus-visible {
+  outline: 2px solid rgba(109, 94, 241, 0.5);
+  outline-offset: 2px;
+}
+
+.rainbow-border {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.rainbow-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(109, 94, 241, 0.3),
+    rgba(201, 182, 255, 0.3),
+    rgba(163, 213, 255, 0.3),
+    rgba(167, 243, 208, 0.3),
+    rgba(251, 211, 233, 0.3)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rainbow-edge 4s ease-in-out infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.rainbow-border:hover::before {
+  opacity: 1;
+}
+
+.mask-spotlight {
+  position: relative;
+}
+
+.mask-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 150px at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mask-spotlight:hover::after {
+  opacity: 1;
+}
+
+/* 性能优化 */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* 降级样式 */
+@media (prefers-reduced-motion: reduce) {
+  .glass-btn:hover {
+    animation: none;
+  }
+
+  .rainbow-border::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .mask-spotlight::after {
+    display: none;
+  }
+}

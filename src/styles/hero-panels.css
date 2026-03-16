@@ -1,0 +1,171 @@
+﻿/**
+ * Hero 面板切换样式
+ * View Transition + 刷板遮帘
+ */
+
+:root {
+  --hero-vt-ease: cubic-bezier(0.22, 0.55, 0.3, 0.95);
+  --hero-vt-duration: 320ms;
+  --hero-veil-opacity: 0.14;
+}
+
+::view-transition-old(hero-pane),
+::view-transition-new(hero-pane) {
+  animation-duration: var(--hero-vt-duration);
+  animation-timing-function: var(--hero-vt-ease);
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    110deg,
+    rgba(186, 201, 255, 0.12) 0%,
+    rgba(164, 218, 255, 0.14) 45%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
+
+:root[data-vt-direction='rtl'] ::view-transition-new(hero-pane) {
+  animation-name: hero-enter-rtl;
+}
+
+:root[data-vt-direction='rtl'] ::view-transition-old(hero-pane) {
+  animation-name: hero-exit-rtl;
+}
+
+:root[data-vt-direction='ltr'] ::view-transition-new(hero-pane) {
+  animation-name: hero-enter-ltr;
+}
+
+:root[data-vt-direction='ltr'] ::view-transition-old(hero-pane) {
+  animation-name: hero-exit-ltr;
+}
+
+@keyframes hero-enter-rtl {
+  from {
+    opacity: 0;
+    transform: translateX(6%);
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hero-exit-rtl {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-4%);
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes hero-enter-ltr {
+  from {
+    opacity: 0;
+    transform: translateX(-6%);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hero-exit-ltr {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(4%);
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+/* 刷板遮帘（fallback 使用） */
+.hero-veil {
+  background: linear-gradient(
+    100deg,
+    rgba(183, 178, 255, 0.18) 0%,
+    rgba(164, 218, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  mix-blend-mode: screen;
+}
+
+/* 可点击标题样式 */
+.hero-title-button {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+}
+
+.hero-title-button:hover {
+  transform: translateY(-1px);
+}
+
+.hero-title-button:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline-offset: 4px;
+  border-radius: 0.75rem;
+}
+
+.hero-title-button:active {
+  transform: translateY(0);
+}
+
+/* 面板容器高光效果 */
+.hero-panel-active {
+  position: relative;
+}
+
+.hero-panel-active::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    135deg,
+    rgba(201, 182, 255, 0.1) 0%,
+    rgba(167, 243, 208, 0.08) 100%
+  );
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-panel-active:hover::before {
+  opacity: 1;
+}
+
+/* 降级模式 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-button {
+    transition: none;
+  }
+
+  .hero-title-button:hover {
+    transform: none;
+  }
+
+  ::view-transition-old(hero-pane),
+  ::view-transition-new(hero-pane) {
+    animation-duration: 0.2s;
+    animation-timing-function: ease;
+    clip-path: none;
+    transform: none;
+  }
+}
